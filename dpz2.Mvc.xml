@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>dpz2.Mvc</name>
+    </assembly>
+    <members>
+        <member name="T:dpz2.Mvc.Kestrel">
+            <summary>
+            Kestrel操作器
+            </summary>
+        </member>
+        <member name="M:dpz2.Mvc.Kestrel.DeployConfig(System.String,Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerOptions)">
+            <summary>
+            应用配置
+            </summary>
+            <param name="path"></param>
+            <param name="options"></param>
+        </member>
+    </members>
+</doc>

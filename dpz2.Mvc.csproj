@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <Version>1.0.1908.1</Version>
+    <Description>基于dpz2开发套件的MVC相关扩展组件(.Net Core)</Description>
+    <Authors>d.p.z software studio</Authors>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageIconUrl>https://dev.lywos.com/Img/dpz/logo.jpg</PackageIconUrl>
+    <RepositoryUrl>https://github.com/dpzsoft/dotnet-core-dpz2-mvc</RepositoryUrl>
+    <PackageId>dotnet-core-dpz2-mvc</PackageId>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>X:\Projects\dpzsoft\dotnet-core-dpz2\dotnet-core-dpz2-mvc\dpz2.Mvc.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="dotnet-core-dpz2-conf" Version="1.0.1907.1" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
