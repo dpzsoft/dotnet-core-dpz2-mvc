@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <Version>1.0.1908.1</Version>
+    <Version>1.0.1908.2</Version>
     <Description>基于dpz2开发套件的MVC相关扩展组件(.Net Core)</Description>
     <Authors>d.p.z software studio</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <PackageReference Include="dotnet-core-dpz2-conf" Version="1.0.1907.1" />
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.6" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
