@@ -1,9 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <Version>1.0.1908.2</Version>
-    <Description>基于dpz2开发套件的MVC相关扩展组件(.Net Core)</Description>
+    <Version>1.0.1908.5</Version>
+    <Description>基于dpz2开发套件的MVC相关扩展组件(.Net Core)，支持Kestrel服务自动配置及XORM框架支持</Description>
     <Authors>d.p.z software studio</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -18,6 +18,10 @@
 
   <ItemGroup>
     <PackageReference Include="dotnet-core-dpz2-conf" Version="1.0.1907.1" />
+    <PackageReference Include="dotnet-core-dpz2-db" Version="1.1.1908.13" />
+    <PackageReference Include="dotnet-core-dpz2-file" Version="1.0.1907.1" />
+    <PackageReference Include="dotnet-core-dpz2-net" Version="1.0.1907.2" />
+    <PackageReference Include="dotnet-core-dpz2-xml" Version="1.0.1907.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />
   </ItemGroup>
 
