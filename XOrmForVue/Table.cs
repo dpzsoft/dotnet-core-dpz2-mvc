@@ -44,10 +44,20 @@ namespace dpz2.Mvc.XOrmForVue {
                 var inf = table["interfaces"].GetNodeByAttr("name", tagName);
                 if (inf == null) throw new Exception($"未找到界面\"{tagName}\"定义，请检查配置文件");
                 if (inf.Attr["type"] != "list") throw new Exception($"界面\"{tagName}\"非列表类型，请检查配置文件");
+
+                // 行设置
                 var rowConfig = inf["row"];
+                if (rowConfig == null) rowConfig = inf.AddNode("row");
+
+                // 单元格设置
                 var cellConfig = inf["cell"];
+                if (cellConfig == null) cellConfig = inf.AddNode("cell");
+
+                // vue设置
                 var vueConfig = inf["vue"];
+                if (vueConfig == null) vueConfig = inf.AddNode("vue");
                 var vueOrderConfig = vueConfig["order"];
+                if (vueOrderConfig == null) vueOrderConfig = vueConfig.AddNode("order");
 
                 var fields = table["fields"].GetNodesByTagName("field", false);
                 foreach (var field in fields) {
@@ -167,8 +177,8 @@ namespace dpz2.Mvc.XOrmForVue {
                         }
 
                         string fieldValue = vueItem + "." + fieldName;//row[fieldName];
-                        var fieldData = field["data"];
-                        string fieldDataType = fieldData.Attr["type"];
+                        //var fieldData = field["data"];
+                        //string fieldDataType = fieldData.Attr["type"];
 
                         //生成td属性
                         string tdAttr = "";
