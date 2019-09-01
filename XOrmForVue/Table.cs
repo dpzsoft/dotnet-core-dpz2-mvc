@@ -38,10 +38,10 @@ namespace dpz2.Mvc.XOrmForVue {
 
             //读取配置文件内容
             string xmlText = dpz2.File.UTF8File.ReadAllText(base.XmlPath);
-            using (dpz2.Xml.XmlRoot xml = new dpz2.Xml.XmlRoot(xmlText)) {
+            using (var xml = dpz2.Xml.Parser.GetDocument(xmlText)) {
                 var table = xml["table"];
 
-                var inf = table["interfaces"].GetNodeByAttrValue("name", tagName);
+                var inf = table["interfaces"].GetNodeByAttr("name", tagName);
                 if (inf == null) throw new Exception($"未找到界面\"{tagName}\"定义，请检查配置文件");
                 if (inf.Attr["type"] != "list") throw new Exception($"界面\"{tagName}\"非列表类型，请检查配置文件");
                 var rowConfig = inf["row"];
@@ -49,16 +49,22 @@ namespace dpz2.Mvc.XOrmForVue {
                 var vueConfig = inf["vue"];
                 var vueOrderConfig = vueConfig["order"];
 
-                var fields = table["fields"];
-                foreach (var field in fields.Nodes) {
+                var fields = table["fields"].GetNodesByTagName("field", false);
+                foreach (var field in fields) {
                     if (field.Name.ToLower() == "field") {
                         string fieldName = field.Attr["name"];
                         string fieldTitle = field.Attr["title"];
 
                         var fieldList = field[tagName];
                         string fieldListType = fieldList.Attr["type"].ToLower();
-                        string fieldListTotal = fieldList.Attr["total"].ToLower();
-                        string fieldListOrder = fieldList.Attr["order"].ToLower();
+
+                        // 统计设定 可选
+                        string fieldListTotal = "";// fieldList.Attr["total"].ToLower();
+                        if (fieldList.Attr.ContainsKey("total")) fieldListTotal = fieldList.Attr["total"].ToLower();
+
+                        // 排序设定 可选
+                        string fieldListOrder = ""; //fieldList.Attr["order"].ToLower();
+                        if (fieldList.Attr.ContainsKey("order")) fieldListOrder = fieldList.Attr["order"].ToLower();
 
                         //类型处理
                         switch (fieldListType) {
@@ -133,7 +139,7 @@ namespace dpz2.Mvc.XOrmForVue {
                 }
 
                 td += $"<tr{trAttr}>";
-                foreach (var field in fields.Nodes) {
+                foreach (var field in fields) {
                     if (field.Name.ToLower() == "field") {
 
                         string fieldName = field.Attr["name"];
@@ -173,7 +179,8 @@ namespace dpz2.Mvc.XOrmForVue {
                         string fieldListType = fieldList.Attr["type"].ToLower();
                         switch (fieldListType) {
                             case "define":
-                                foreach (var fieldListDefine in fieldList.Nodes) {
+                                var fieldListDefines = fieldList.GetNodesByTagName("define", false);
+                                foreach (var fieldListDefine in fieldListDefines) {
                                     string fieldListDefineValue = fieldListDefine.Attr["value"];
                                     if (fieldValue == fieldListDefineValue) {
                                         fieldValue = fieldListDefine.Attr["text"];
@@ -212,7 +219,10 @@ namespace dpz2.Mvc.XOrmForVue {
                         }
 
                         //项目累计
-                        string fieldListTotal = fieldList.Attr["total"].ToLower();
+                        // 统计设定 可选
+                        string fieldListTotal = "";// fieldList.Attr["total"].ToLower();
+                        if (fieldList.Attr.ContainsKey("total")) fieldListTotal = fieldList.Attr["total"].ToLower();
+                        //string fieldListTotal = fieldList.Attr["total"].ToLower();
                         if (fieldListTotal == "sum") {
                             double fieldTotal = totals[fieldName];
                             fieldTotal += fieldValue.ToDouble();
@@ -227,7 +237,7 @@ namespace dpz2.Mvc.XOrmForVue {
                 if (hasTotal) {
 
                     td += $"<tr>";
-                    foreach (var field in fields.Nodes) {
+                    foreach (var field in fields) {
                         if (field.Name.ToLower() == "field") {
                             string fieldName = field.Attr["name"];
                             string fieldTitle = field.Attr["title"];

@@ -107,8 +107,9 @@ namespace dpz2.Mvc.XOrmForVue {
         /// <param name="row"></param>
         protected void CheckForm(XmlNode table, string tabName, dpz2.db.Row row) {
 
-            var fields = table["fields"];
-            foreach (var field in fields.Nodes) {
+            var fields = table["fields"].GetNodesByTagName("field", false);
+
+            foreach (var field in fields) {
                 if (field.Name.ToLower() == "field") {
                     string fieldName = field.Attr["name"];
                     string fieldTitle = field.Attr["title"];
@@ -117,7 +118,8 @@ namespace dpz2.Mvc.XOrmForVue {
                     bool fieldDataEmpty = fieldData.Attr["empty"] != "false";
                     int fieldDataFloat = (fieldData.Attr["float"]).ToInteger();
 
-                    var fieldAdd = field.Nodes.GetFirstNodeByName("add");
+                    // 获取Add定义
+                    var fieldAdd = field.GetNodeByAttr("name", "add");
                     if (fieldAdd != null) {
 
                         string fieldAddSave = fieldAdd.Attr["save"];
@@ -250,7 +252,10 @@ namespace dpz2.Mvc.XOrmForVue {
         /// <returns></returns>
         protected string GetFillContent(string plmName, string tabName, dpz2.Xml.XmlNode fills, dpz2.db.Row rowFill) {
             string res = "";
-            foreach (var fill in fills.Nodes) {
+
+            // 获取所有的fill定义
+            var fillNodes = fills.GetNodesByTagName("fill", false);
+            foreach (var fill in fillNodes) {
                 switch (fill.Name.ToLower()) {
                     case "string"://字符串
                         res += FillWithSign(fill.Attr["value"], rowFill);

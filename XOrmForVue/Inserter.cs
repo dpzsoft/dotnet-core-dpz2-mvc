@@ -33,14 +33,14 @@ namespace dpz2.Mvc.XOrmForVue {
 
             //读取配置文件内容
             string xmlText = dpz2.File.UTF8File.ReadAllText(base.XmlPath);
-            using (dpz2.Xml.XmlRoot xml = new dpz2.Xml.XmlRoot(xmlText)) {
+            using (var xml = dpz2.Xml.Parser.GetDocument(xmlText)) {
 
                 //进行提交数据检测
                 var table = xml["table"];
                 CheckForm(table, base.Table, row);
 
-                var fields = table["fields"];
-                foreach (var field in fields.Nodes) {
+                var fields = table["fields"].GetNodesByTagName("field", false);
+                foreach (var field in fields) {
                     if (field.Name.ToLower() == "field") {
                         string fieldName = field.Attr["name"];
                         string fieldTitle = field.Attr["title"];
@@ -50,7 +50,7 @@ namespace dpz2.Mvc.XOrmForVue {
                         int fieldDataFloat = (fieldData.Attr["float"]).ToInteger();
                         string fieldDataEncoding = fieldData.Attr["encoding"];
 
-                        var fieldAdd = field.Nodes.GetFirstNodeByName("add");
+                        var fieldAdd = field.GetNodeByAttr("name", "add", false);
                         if (fieldAdd != null) {
 
                             string fieldAddSave = fieldAdd.Attr["save"];

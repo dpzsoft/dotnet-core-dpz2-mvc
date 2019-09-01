@@ -37,10 +37,10 @@ namespace dpz2.Mvc.XOrmForVue {
 
             //读取配置文件内容
             string xmlText = dpz2.File.UTF8File.ReadAllText(base.XmlPath);
-            using (dpz2.Xml.XmlRoot xml = new dpz2.Xml.XmlRoot(xmlText)) {
+            using (var xml = dpz2.Xml.Parser.GetDocument(xmlText)) {
                 var table = xml["table"];
 
-                var inf = table["interfaces"].GetNodeByAttrValue("name", tagName);
+                var inf = table["interfaces"].GetNodeByAttr("name", tagName);
                 if (inf == null) throw new Exception($"未找到界面\"{tagName}\"定义，请检查配置文件");
                 if (inf.Attr["type"] != formType) throw new Exception($"界面\"{tagName}\"非{formType}类型，请检查配置文件");
 
@@ -52,8 +52,8 @@ namespace dpz2.Mvc.XOrmForVue {
                 string tagContentName = infContent.Attr["tag-name"];
                 //string tagContentBind = infContent.Attr["bind"];
 
-                var fields = table["fields"];
-                foreach (var field in fields.Nodes) {
+                var fields = table["fields"].GetNodesByTagName("field", false);
+                foreach (var field in fields) {
                     if (field.Name.ToLower() == "field") {
                         string fieldName = field.Attr["name"];
                         string fieldTitle = field.Attr["title"];
@@ -154,8 +154,8 @@ namespace dpz2.Mvc.XOrmForVue {
 
                                 fieldContent = $"<select{elAttr.ToString()}>";
 
-                                var fieldSelect = fieldForm["select"];
-                                foreach (var option in fieldSelect.Nodes) {
+                                var fieldSelect = fieldForm["select"].GetNodesByTagName("option", false);
+                                foreach (var option in fieldSelect) {
                                     if (option.Name == "option") {
                                         var optionValue = option.Attr["value"];
                                         var optionText = option.Attr["text"];

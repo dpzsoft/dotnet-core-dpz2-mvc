@@ -40,10 +40,10 @@ namespace dpz2.Mvc.XOrmForVue {
 
             //读取配置文件内容
             string xmlText = dpz2.File.UTF8File.ReadAllText(base.XmlPath);
-            using (dpz2.Xml.XmlRoot xml = new dpz2.Xml.XmlRoot(xmlText)) {
+            using (var xml = dpz2.Xml.Parser.GetDocument(xmlText)) {
                 var table = xml["table"];
 
-                var inf = table["interfaces"].GetNodeByAttrValue("name", tagName);
+                var inf = table["interfaces"].GetNodeByAttr("name", tagName);
                 if (inf == null) throw new Exception($"未找到界面\"{tagName}\"定义，请检查配置文件");
                 if (inf.Attr["type"] != "view") throw new Exception($"界面\"{tagName}\"非视图类型，请检查配置文件");
 
@@ -55,8 +55,9 @@ namespace dpz2.Mvc.XOrmForVue {
                 string tagTitleName = infTitle.Attr["tag-name"];
                 string tagContentName = infContent.Attr["tag-name"];
 
-                var fields = table["fields"];
-                foreach (var field in fields.Nodes) {
+                // 获取所有的字段定义
+                var fields = table["fields"].GetNodesByTagName("field", false);
+                foreach (var field in fields) {
                     if (field.Name.ToLower() == "field") {
                         string fieldName = field.Attr["name"];
                         string fieldTitle = field.Attr["title"];

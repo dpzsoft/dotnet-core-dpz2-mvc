@@ -53,87 +53,129 @@ namespace dpz2.Mvc.XOrmForVue {
             //string xmlString = dpz.IO.UTF8File.ReadAllText(xmlCachePath);
             string xmlCacheText = dpz2.File.UTF8File.ReadAllText(xmlCachePath);
             string xmlFormText = dpz2.File.UTF8File.ReadAllText(xmlFormPath);
-            using (dpz2.Xml.XmlRoot xmlCache = new dpz2.Xml.XmlRoot(xmlCacheText)) {
-                using (dpz2.Xml.XmlRoot form = new dpz2.Xml.XmlRoot(xmlFormText)) {
+            using (var xmlCache = dpz2.Xml.Parser.GetDocument(xmlCacheText)) {
+                using (var form = dpz2.Xml.Parser.GetDocument(xmlFormText)) {
                     var xmlTable = xmlCache["table"];
                     var formTable = form["table"];
+
+                    // 为空则新建
+                    if (formTable == null) {
+                        formTable = new Xml.XmlNode("table");
+                        form.Nodes.Add(formTable);
+                    }
                     formTable.Attr["name"] = xmlTable.Attr["name"];
                     formTable.Attr["title"] = xmlTable.Attr["title"];
 
                     #region [=====初始化界面定义=====]
 
                     var formInterfaces = formTable["interfaces"];
+                    if (formInterfaces == null) formInterfaces = formTable.AddNode("interfaces");
 
                     //初始化添加界面
-                    if (formInterfaces.GetNodeByAttrValue("name", "add") == null) {
-                        var formInterface = formInterfaces.Add("interface");
+                    if (formInterfaces.GetNodeByAttr("name", "add") == null) {
+                        //var formInterface = new dpz2.Xml.XmlNode("interface", formInterfaces);
+                        //formInterfaces.Nodes.Add(formInterface);
+                        var formInterface = formInterfaces.AddNode("interface");
                         formInterface.Attr["name"] = "add";
                         formInterface.Attr["type"] = "add";
                         formInterface.Attr["description"] = "添加";
 
-                        var formInterfaceLine = formInterface.Add("line");
+                        //var formInterfaceLine = new dpz2.Xml.XmlNode("line", formInterface);
+                        //formInterface.Nodes.Add(formInterfaceLine);
+                        var formInterfaceLine = formInterface.AddNode("line");
                         formInterfaceLine.Attr["tag-name"] = "div";
 
-                        var formInterfaceTitle = formInterface.Add("title");
+                        //var formInterfaceTitle = new dpz2.Xml.XmlNode("title", formInterface);
+                        //formInterface.Nodes.Add(formInterfaceTitle);
+                        var formInterfaceTitle = formInterface.AddNode("title");
                         formInterfaceTitle.Attr["tag-name"] = "i";
 
-                        var formInterfaceInput = formInterface.Add("content");
+                        //var formInterfaceInput = new dpz2.Xml.XmlNode("content", formInterface);
+                        //formInterface.Nodes.Add(formInterfaceInput);
+                        var formInterfaceInput = formInterface.AddNode("content");
                         formInterfaceInput.Attr["tag-name"] = "s";
                     }
 
                     //初始化修改界面
-                    if (formInterfaces.GetNodeByAttrValue("name", "edit") == null) {
-                        var formInterface = formInterfaces.Add("interface");
+                    if (formInterfaces.GetNodeByAttr("name", "edit") == null) {
+
+                        //var formInterface = new dpz2.Xml.XmlNode("interface", formInterfaces);
+                        //formInterfaces.Nodes.Add(formInterface);
+                        var formInterface = formInterfaces.AddNode("interface");
                         formInterface.Attr["name"] = "edit";
                         formInterface.Attr["type"] = "edit";
                         formInterface.Attr["description"] = "修改";
 
-                        var formInterfaceLine = formInterface.Add("line");
+                        var formInterfaceLine = formInterface.AddNode("line");
+                        //var formInterfaceLine = new dpz2.Xml.XmlNode("line", formInterface);
+                        //formInterface.Nodes.Add(formInterfaceLine);
                         formInterfaceLine.Attr["tag-name"] = "div";
 
-                        var formInterfaceTitle = formInterface.Add("title");
+                        var formInterfaceTitle = formInterface.AddNode("title");
+                        //var formInterfaceTitle = new dpz2.Xml.XmlNode("title", formInterface);
+                        //formInterface.Nodes.Add(formInterfaceTitle);
                         formInterfaceTitle.Attr["tag-name"] = "i";
 
-                        var formInterfaceInput = formInterface.Add("content");
+                        var formInterfaceInput = formInterface.AddNode("content");
+                        //var formInterfaceInput = new dpz2.Xml.XmlNode("content", formInterface);
+                        //formInterface.Nodes.Add(formInterfaceInput);
                         formInterfaceInput.Attr["tag-name"] = "s";
                     }
 
                     //初始化视图界面
-                    if (formInterfaces.GetNodeByAttrValue("name", "view") == null) {
-                        var formInterface = formInterfaces.Add("interface");
+                    if (formInterfaces.GetNodeByAttr("name", "view") == null) {
+                        var formInterface = formInterfaces.AddNode("interface");
+                        //var formInterface = new dpz2.Xml.XmlNode("interface", formInterfaces);
+                        //formInterfaces.Nodes.Add(formInterface);
                         formInterface.Attr["name"] = "view";
                         formInterface.Attr["type"] = "view";
                         formInterface.Attr["description"] = "视图";
 
-                        var formInterfaceLine = formInterface.Add("line");
+                        var formInterfaceLine = formInterface.AddNode("line");
+                        //var formInterfaceLine = new dpz2.Xml.XmlNode("line", formInterface);
+                        //formInterface.Nodes.Add(formInterfaceLine);
                         formInterfaceLine.Attr["tag-name"] = "div";
 
-                        var formInterfaceTitle = formInterface.Add("title");
+                        var formInterfaceTitle = formInterface.AddNode("title");
+                        //var formInterfaceTitle = new dpz2.Xml.XmlNode("title", formInterface);
+                        //formInterface.Nodes.Add(formInterfaceTitle);
                         formInterfaceTitle.Attr["tag-name"] = "i";
 
-                        var formInterfaceContent = formInterface.Add("content");
+                        var formInterfaceContent = formInterface.AddNode("content");
+                        //var formInterfaceContent = new dpz2.Xml.XmlNode("content", formInterface);
+                        //formInterface.Nodes.Add(formInterfaceContent);
                         formInterfaceContent.Attr["tag-name"] = "s";
                     }
 
                     //初始化列表界面
-                    if (formInterfaces.GetNodeByAttrValue("name", "list") == null) {
-                        var formInterface = formInterfaces.Add("interface");
+                    if (formInterfaces.GetNodeByAttr("name", "list") == null) {
+                        var formInterface = formInterfaces.AddNode("interface");
+                        //var formInterface = new dpz2.Xml.XmlNode("interface", formInterfaces);
+                        //formInterfaces.Nodes.Add(formInterface);
                         formInterface.Attr["name"] = "list";
                         formInterface.Attr["type"] = "list";
                         formInterface.Attr["description"] = "列表";
 
-                        var formInterfaceVue = formInterface.Add("vue");
+                        var formInterfaceVue = formInterface.AddNode("vue");
+                        //var formInterfaceVue = new dpz2.Xml.XmlNode("vue", formInterface);
+                        //formInterface.Nodes.Add(formInterfaceVue);
                         formInterfaceVue.Attr["for"] = "(row,index) in list";
                         formInterfaceVue.Attr["item"] = "row";
                         formInterfaceVue.Attr["key"] = "row.ID";
 
-                        var formInterfaceVueOrder = formInterfaceVue.Add("order");
+                        var formInterfaceVueOrder = formInterfaceVue.AddNode("order");
+                        //var formInterfaceVueOrder = new dpz2.Xml.XmlNode("order", formInterfaceVue);
+                        //formInterfaceVue.Nodes.Add(formInterfaceVueOrder);
                         formInterfaceVueOrder.Attr["name"] = "orderField";
                         formInterfaceVueOrder.Attr["type"] = "orderType";
                         formInterfaceVueOrder.Attr["click"] = "onOrder";
 
-                        var formInterfaceRow = formInterfaces.Add("row");
-                        var formInterfaceCell = formInterfaces.Add("cell");
+                        var formInterfaceRow = formInterface.AddNode("row");
+                        //var formInterfaceRow = new dpz2.Xml.XmlNode("row", formInterface);
+                        //formInterface.Nodes.Add(formInterfaceRow);
+                        var formInterfaceCell = formInterface.AddNode("cell");
+                        //var formInterfaceCell = new dpz2.Xml.XmlNode("cell", formInterface);
+                        //formInterface.Nodes.Add(formInterfaceCell);
                     }
 
                     #endregion
@@ -141,45 +183,47 @@ namespace dpz2.Mvc.XOrmForVue {
                     #region [=====初始化字段定义=====]
 
                     var formFields = formTable["fields"];
-                    foreach (var xmlField in xmlTable.Nodes) {
+                    if (formFields == null) formFields = formTable.AddNode("fields");
+
+                    var xmlFields = xmlTable.GetNodesByTagName("field", false);
+                    foreach (var xmlField in xmlFields) {
                         if (xmlField.Name.ToLower() == "field") {
                             string fieldName = xmlField.Attr["name"];
-                            var formField = formFields.GetNodeByAttrValue("name", fieldName);
+                            var formField = formFields.GetNodeByAttr("name", fieldName);
                             if (formField == null) {
-                                formField = formFields.Add("field");
+                                formField = formFields.AddNode("field");
                                 formField.Attr["name"] = fieldName;
-                                formField.Add("data");
+                                formField.AddNode("data");
                             }
 
-                            var formFieldAdd = formField.Nodes.GetFirstNodeByName("add");
+                            var formFieldAdd = formField.GetNodeByAttr("name", "add", false);
                             if (formFieldAdd == null) {
-                                formFieldAdd = formField.Add("add");
+                                formFieldAdd = formField.AddNode("add");
                                 formFieldAdd.Attr["type"] = "input";
                                 formFieldAdd.Attr["save"] = "form";
                                 formFieldAdd.Attr["model"] = "form." + fieldName;
                             }
 
-                            var formFieldEdit = formField.Nodes.GetFirstNodeByName("edit");
+                            var formFieldEdit = formField.GetNodeByAttr("name", "edit", false);
                             if (formFieldEdit == null) {
-                                formFieldEdit = formField.Add("edit");
+                                formFieldEdit = formField.AddNode("edit");
                                 formFieldEdit.Attr["type"] = "input";
                                 formFieldEdit.Attr["save"] = "form";
                                 formFieldEdit.Attr["model"] = "form." + fieldName;
                             }
 
-                            var formFieldView = formField.Nodes.GetFirstNodeByName("view");
+                            var formFieldView = formField.GetNodeByAttr("name", "view");
                             if (formFieldView == null) {
-                                formFieldView = formField.Add("view");
+                                formFieldView = formField.AddNode("view");
                                 formFieldView.Attr["type"] = "text";
                             }
 
-                            var formFieldList = formField.Nodes.GetFirstNodeByName("list");
+                            var formFieldList = formField.GetNodeByAttr("name", "list");
                             if (formFieldList == null) {
-                                formFieldList = formField.Add("list");
+                                formFieldList = formField.AddNode("list");
                                 formFieldList.Attr["type"] = "text";
                                 formFieldList.Attr["width"] = "100px";
                             }
-
 
                             formField.Attr["title"] = xmlField.Attr["title"];
                             var xmlFieldData = xmlField["data"];
