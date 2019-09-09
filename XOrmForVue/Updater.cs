@@ -47,12 +47,16 @@ namespace dpz2.Mvc.XOrmForVue {
                         string fieldName = field.Attr["name"];
                         string fieldTitle = field.Attr["title"];
                         var fieldData = field["data"];
+                        if (fieldData == null) {
+                            fieldData = new Xml.XmlNode("data");
+                            fieldData.Attr["type"] = "";
+                        }
                         string fieldDataType = fieldData.Attr["type"];
                         bool fieldDataEmpty = fieldData.Attr["empty"] != "false";
                         int fieldDataFloat = fieldData.Attr["float"].ToInteger();
                         string fieldDataEncoding = fieldData.Attr["encoding"];
 
-                        var fieldEdit = field.GetNodeByAttr("name", "edit", false);
+                        var fieldEdit = field["edit"];
                         if (fieldEdit != null) {
 
                             string fieldEditSave = fieldEdit.Attr["save"];
@@ -62,7 +66,7 @@ namespace dpz2.Mvc.XOrmForVue {
                                     string fieldValue = base.Form[fieldName];
 
                                     //进行编码处理
-                                    switch (fieldDataEncoding.ToLower()) {
+                                    switch (fieldDataEncoding?.ToLower()) {
                                         case "url":
                                             fieldValue = "encoding://url/" + HttpUtility.UrlEncode(fieldValue);
                                             break;

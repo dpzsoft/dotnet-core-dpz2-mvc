@@ -39,6 +39,10 @@ namespace dpz2.Mvc.XOrmForVue {
             string xmlText = dpz2.File.UTF8File.ReadAllText(base.XmlPath);
             using (var xml = dpz2.Xml.Parser.GetDocument(xmlText)) {
                 var table = xml["table"];
+                if (table == null) {
+                    table = new Xml.XmlNode("table");
+                    xml.Nodes.Add(table);
+                }
 
                 var inf = table["interfaces"].GetNodeByAttr("name", tagName);
                 if (inf == null) throw new Exception($"未找到界面\"{tagName}\"定义，请检查配置文件");
@@ -61,11 +65,17 @@ namespace dpz2.Mvc.XOrmForVue {
 
                         // 获取数据配置
                         var fieldData = field["data"];
-                        string fieldDataType = fieldData.Attr["type"];
+                        string fieldDataType = "";
+                        if (fieldData != null) fieldDataType = fieldData.Attr["type"];
 
                         // 获取表单类型配置
                         var fieldForm = field[formType];
-                        string fieldAddType = fieldForm.Attr["type"].ToLower();
+                        if (fieldForm == null) {
+                            fieldForm = new Xml.XmlNode(formType);
+                            fieldForm.Attr["type"] = "";
+                        }
+
+                        string fieldAddType = fieldForm.Attr["type"]?.ToLower();
 
                         string fieldBind = fieldForm.Attr["bind"];
                         string fieldModel = fieldForm.Attr["model"];
@@ -127,10 +137,10 @@ namespace dpz2.Mvc.XOrmForVue {
                                 elAttr["name"] = fieldName;
                                 elAttr["type"] = "text";
                                 elAttr["placeholder"] = fieldTitle;
-                                string fieldAddReadonly = fieldForm.Attr["readonly"].ToLower();
-                                string fieldAddWidth = fieldForm.Attr["width"].ToLower();
+                                string fieldAddReadonly = fieldForm.Attr["readonly"]?.ToLower();
+                                string fieldAddWidth = fieldForm.Attr["width"]?.ToLower();
 
-                                elAttr["style"] = (fieldAddWidth != "" ? "width:" + fieldAddWidth + ";" : "");
+                                elAttr["style"] = (!fieldAddWidth.IsNoneOrNull() ? "width:" + fieldAddWidth + ";" : "");
                                 if (!fieldBind.IsNone()) elAttr["v-bind:value"] = fieldBind;
                                 if (!fieldModel.IsNone()) elAttr["v-model"] = fieldModel;
                                 elAttr["value"] = fieldValue;
@@ -139,13 +149,13 @@ namespace dpz2.Mvc.XOrmForVue {
                                 fieldContent = $"<input{elAttr.ToString()} />";
                                 break;
                             case "select":
-                                fieldAddReadonly = fieldForm.Attr["readonly"].ToLower();
-                                fieldAddWidth = fieldForm.Attr["width"].ToLower();
+                                fieldAddReadonly = fieldForm.Attr["readonly"]?.ToLower();
+                                fieldAddWidth = fieldForm.Attr["width"]?.ToLower();
 
                                 elAttr["id"] = fieldInputId;
                                 elAttr["name"] = fieldName;
                                 //样式处理
-                                elAttr["style"] = (fieldAddWidth != "" ? "width:" + fieldAddWidth + ";" : "");
+                                elAttr["style"] = (!fieldAddWidth.IsNoneOrNull() ? "width:" + fieldAddWidth + ";" : "");
                                 //只读处理
                                 if (fieldAddReadonly == "true") elAttr["readonly"] = "readonly";
 
@@ -159,7 +169,7 @@ namespace dpz2.Mvc.XOrmForVue {
                                     if (option.Name == "option") {
                                         var optionValue = option.Attr["value"];
                                         var optionText = option.Attr["text"];
-                                        if (optionText == "") optionText = option.InnerXml;
+                                        if (optionText.IsNoneOrNull()) optionText = option.InnerXml;
 
                                         if (fieldBind.IsNone()) {
                                             fieldContent += $"<option value=\"{optionValue}\">{optionText}</option>";

@@ -114,6 +114,10 @@ namespace dpz2.Mvc.XOrmForVue {
                     string fieldName = field.Attr["name"];
                     string fieldTitle = field.Attr["title"];
                     var fieldData = field["data"];
+                    if (fieldData == null) {
+                        fieldData = new XmlNode("data");
+                        fieldData.Attr["type"] = "";
+                    }
                     string fieldDataType = fieldData.Attr["type"];
                     bool fieldDataEmpty = fieldData.Attr["empty"] != "false";
                     int fieldDataFloat = (fieldData.Attr["float"]).ToInteger();
